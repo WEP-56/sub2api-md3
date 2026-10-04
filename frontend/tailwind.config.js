@@ -5,47 +5,109 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 主色调 - Teal/Cyan 青色系
+        /* ============================================================
+         * MD3 桥接层：原站色板全部改写为 --m3- 令牌引用。
+         * 函数式颜色支持 /opacity 透明度修饰符（color-mix 包装）。
+         * 原站页面使用 primary-50..900 阶，M3 无阶数概念，
+         * 按「容器色/主色/表面混色」近似映射，实现不改模板换肤。
+         * ============================================================ */
         primary: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e'
+          50: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-primary) 8%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-primary) 8%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          100: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-primary-container)' : `color-mix(in srgb, var(--m3-primary-container) ${opacityValue}, transparent)`,
+          200: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-primary) 30%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-primary) 30%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          300: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-primary) 55%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-primary) 55%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          400: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-primary) 78%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-primary) 78%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          500: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-primary)' : `color-mix(in srgb, var(--m3-primary) ${opacityValue}, transparent)`,
+          600: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-primary)' : `color-mix(in srgb, var(--m3-primary) ${opacityValue}, transparent)`,
+          700: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-primary-container)' : `color-mix(in srgb, var(--m3-on-primary-container) ${opacityValue}, transparent)`,
+          800: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-primary-container)' : `color-mix(in srgb, var(--m3-on-primary-container) ${opacityValue}, transparent)`,
+          900: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-primary-container)' : `color-mix(in srgb, var(--m3-on-primary-container) ${opacityValue}, transparent)`,
+          950: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-primary-container)' : `color-mix(in srgb, var(--m3-on-primary-container) ${opacityValue}, transparent)`
         },
-        // 辅助色 - 深蓝灰
-        accent: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617'
+        /* gray-* → M3 中性表面阶（原站大量用于文本/边框/底色）
+         * 全阶使用 color-mix 包装以支持 /opacity 透明度修饰符 */
+        gray: {
+          50: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container-low)' : `color-mix(in srgb, var(--m3-surface-container-low) ${opacityValue}, transparent)`,
+          100: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container)' : `color-mix(in srgb, var(--m3-surface-container) ${opacityValue}, transparent)`,
+          200: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-outline-variant)' : `color-mix(in srgb, var(--m3-outline-variant) ${opacityValue}, transparent)`,
+          300: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-outline)' : `color-mix(in srgb, var(--m3-outline) ${opacityValue}, transparent)`,
+          400: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          500: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          600: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          700: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface)' : `color-mix(in srgb, var(--m3-on-surface) ${opacityValue}, transparent)`,
+          800: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface)' : `color-mix(in srgb, var(--m3-on-surface) ${opacityValue}, transparent)`,
+          900: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface)' : `color-mix(in srgb, var(--m3-on-surface) ${opacityValue}, transparent)`,
+          950: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface)' : `color-mix(in srgb, var(--m3-on-surface) ${opacityValue}, transparent)`
         },
-        // 深色模式背景
+        /* dark-*（暗色专属类）→ M3 暗色令牌 */
         dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617'
+          50: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface)' : `color-mix(in srgb, var(--m3-on-surface) ${opacityValue}, transparent)`,
+          100: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container-high)' : `color-mix(in srgb, var(--m3-surface-container-high) ${opacityValue}, transparent)`,
+          200: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container-high)' : `color-mix(in srgb, var(--m3-surface-container-high) ${opacityValue}, transparent)`,
+          300: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          400: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          500: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-surface-variant)' : `color-mix(in srgb, var(--m3-on-surface-variant) ${opacityValue}, transparent)`,
+          600: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-outline)' : `color-mix(in srgb, var(--m3-outline) ${opacityValue}, transparent)`,
+          700: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-outline-variant)' : `color-mix(in srgb, var(--m3-outline-variant) ${opacityValue}, transparent)`,
+          800: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container)' : `color-mix(in srgb, var(--m3-surface-container) ${opacityValue}, transparent)`,
+          900: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface-container-low)' : `color-mix(in srgb, var(--m3-surface-container-low) ${opacityValue}, transparent)`,
+          950: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-surface)' : `color-mix(in srgb, var(--m3-surface) ${opacityValue}, transparent)`
+        },
+        /* accent-* → M3 tertiary */
+        accent: {
+          50: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-tertiary) 8%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-tertiary) 8%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          100: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-tertiary-container)' : `color-mix(in srgb, var(--m3-tertiary-container) ${opacityValue}, transparent)`,
+          200: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-tertiary) 30%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-tertiary) 30%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          300: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-tertiary) 55%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-tertiary) 55%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          400: ({ opacityValue }) => opacityValue === undefined ? 'color-mix(in srgb, var(--m3-tertiary) 78%, var(--m3-surface))' : `color-mix(in srgb, var(--m3-tertiary) 78%, var(--m3-surface), transparent ${1 - opacityValue})`,
+          500: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-tertiary)' : `color-mix(in srgb, var(--m3-tertiary) ${opacityValue}, transparent)`,
+          600: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-tertiary)' : `color-mix(in srgb, var(--m3-tertiary) ${opacityValue}, transparent)`,
+          700: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-tertiary-container)' : `color-mix(in srgb, var(--m3-on-tertiary-container) ${opacityValue}, transparent)`,
+          800: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-tertiary-container)' : `color-mix(in srgb, var(--m3-on-tertiary-container) ${opacityValue}, transparent)`,
+          900: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-tertiary-container)' : `color-mix(in srgb, var(--m3-on-tertiary-container) ${opacityValue}, transparent)`,
+          950: ({ opacityValue }) => opacityValue === undefined ? 'var(--m3-on-tertiary-container)' : `color-mix(in srgb, var(--m3-on-tertiary-container) ${opacityValue}, transparent)`
+        },
+        /* M3 原生语义类（md3: 前缀场景下可直接用 m3-primary 等） */
+        m3: {
+          primary: 'var(--m3-primary)',
+          'on-primary': 'var(--m3-on-primary)',
+          'primary-container': 'var(--m3-primary-container)',
+          'on-primary-container': 'var(--m3-on-primary-container)',
+          secondary: 'var(--m3-secondary)',
+          'on-secondary': 'var(--m3-on-secondary)',
+          'secondary-container': 'var(--m3-secondary-container)',
+          'on-secondary-container': 'var(--m3-on-secondary-container)',
+          tertiary: 'var(--m3-tertiary)',
+          'on-tertiary': 'var(--m3-on-tertiary)',
+          'tertiary-container': 'var(--m3-tertiary-container)',
+          'on-tertiary-container': 'var(--m3-on-tertiary-container)',
+          error: 'var(--m3-error)',
+          'on-error': 'var(--m3-on-error)',
+          'error-container': 'var(--m3-error-container)',
+          'on-error-container': 'var(--m3-on-error-container)',
+          success: 'var(--m3-success)',
+          'on-success': 'var(--m3-on-success)',
+          'success-container': 'var(--m3-success-container)',
+          'on-success-container': 'var(--m3-on-success-container)',
+          warning: 'var(--m3-warning)',
+          'on-warning': 'var(--m3-on-warning)',
+          'warning-container': 'var(--m3-warning-container)',
+          'on-warning-container': 'var(--m3-on-warning-container)',
+          surface: 'var(--m3-surface)',
+          'on-surface': 'var(--m3-on-surface)',
+          'surface-variant': 'var(--m3-surface-variant)',
+          'on-surface-variant': 'var(--m3-on-surface-variant)',
+          'surface-dim': 'var(--m3-surface-dim)',
+          'surface-bright': 'var(--m3-surface-bright)',
+          'surface-container-lowest': 'var(--m3-surface-container-lowest)',
+          'surface-container-low': 'var(--m3-surface-container-low)',
+          'surface-container': 'var(--m3-surface-container)',
+          'surface-container-high': 'var(--m3-surface-container-high)',
+          'surface-container-highest': 'var(--m3-surface-container-highest)',
+          'inverse-surface': 'var(--m3-inverse-surface)',
+          'inverse-on-surface': 'var(--m3-inverse-on-surface)',
+          outline: 'var(--m3-outline)',
+          'outline-variant': 'var(--m3-outline-variant)'
         }
       },
       fontFamily: {

@@ -1,0 +1,108 @@
+name: Build MD3 Preview
+
+on:
+  push:
+    branches: [md3]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend (static preview)
+        working-directory: frontend
+        env:
+          # 输出到独立预览目录而非后端嵌入目录
+          VITE_API_BASE_URL: /api/v1
+        run: |
+          mkdir -p ../preview-dist
+          npx vite build --outDir ../preview-dist --emptyOutDir
+
+      - name: Add SPA routing fallback
+        run: |
+          cat > preview-dist/404.html <<'EOF'
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8" />
+              <title>Sub2API MD3 Preview</title>
+              <script>
+                // GitHub Pages SPA：把路径转成 query 交给 index.html 还原
+                var pathSegmentsToKeep = 0;
+                var l = window.location;
+                l.replace(
+                  l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+                    l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+                    l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+                    (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+                    l.hash
+                );
+              </script>
+            </head>
+            <body></body>
+          </html>
+          EOF
+
+      - name: Inject SPA redirect script into index.html
+        run: |
+          # 把路由还原脚本插到 index.html <head> 顶部（GitHub Pages SPA 方案）
+          python3 - <<'EOF'
+          from pathlib import Path
+          p = Path('preview-dist/index.html')
+          html = p.read_text(encoding='utf-8')
+          redirect = '''<script>
+            (function(l) {
+              if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function(s) {
+                  return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                  l.pathname + decoded + l.hash
+                );
+              }
+            }(window.location))
+          </script>'''
+          html = html.replace('<head>', '<head>' + redirect, 1)
+          p.write_text(html, encoding='utf-8')
+          EOF
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: preview-dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
