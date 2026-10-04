@@ -418,6 +418,12 @@ export default {
     },
     // Forgot password
     forgotPassword: 'Forgot password?',
+    // Brand panel (login page left side, Material 3)
+    brandHeadline: 'One API for every leading model',
+    brandSubheadline: 'Unify Claude, OpenAI, Gemini and Grok subscriptions into a single gateway with ride-sharing and cost split — native dev tools work out of the box.',
+    brandPlatforms: 'Claude Code,Codex,Gemini CLI,Grok',
+    brandFeatures:
+      'Unified access|All subscriptions behind one standard API with transparent quotas,Ride-sharing|Split costs across members,Native tools|Claude Code, Codex and Gemini CLI work with zero changes,Self-hosted|Open-source community edition on PostgreSQL + Redis, data stays yours',
     forgotPasswordTitle: 'Reset Your Password',
     forgotPasswordHint: 'Enter your email address and we will send you a link to reset your password.',
     sendResetLink: 'Send Reset Link',

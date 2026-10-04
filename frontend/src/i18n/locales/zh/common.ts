@@ -416,6 +416,12 @@ export default {
     },
     // 忘记密码
     forgotPassword: '忘记密码？',
+    // 品牌面板（登录页左侧，Material 3）
+    brandHeadline: '一个 API，畅享所有主流模型',
+    brandSubheadline: '将 Claude、OpenAI、Gemini、Grok 订阅统一为中转接口，支持拼车共享与成本分摊，原生开发工具零改造接入。',
+    brandPlatforms: 'Claude Code,Codex,Gemini CLI,Grok',
+    brandFeatures:
+      '订阅统一接入|订阅汇聚为一个标准 API,随时切换调用,配额透明可追踪,拼车共享|多人分摊成本,原生工具|Claude Code、Codex、Gemini CLI 开箱即用,无需改造工作流,自托管|开源社区版,PostgreSQL + Redis 私有化部署,数据自持',
     forgotPasswordTitle: '重置密码',
     forgotPasswordHint: '输入您的邮箱地址，我们将向您发送密码重置链接。',
     sendResetLink: '发送重置链接',

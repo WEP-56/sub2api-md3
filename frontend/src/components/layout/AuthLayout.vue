@@ -1,80 +1,134 @@
 <template>
-  <div class="relative flex min-h-screen items-center justify-center overflow-hidden p-4">
-    <!-- Background -->
-    <div
-      class="absolute inset-0 bg-gradient-to-br from-gray-50 via-primary-50/30 to-gray-100 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950"
-    ></div>
-
-    <!-- Decorative Elements -->
-    <div class="pointer-events-none absolute inset-0 overflow-hidden">
-      <!-- Gradient Orbs -->
+  <div class="relative flex min-h-screen overflow-hidden bg-[var(--m3-surface)] text-[var(--m3-on-surface)] lg:grid lg:grid-cols-[1.1fr_1fr]">
+    <!-- ============ 品牌面板（仅桌面端，MD3 风格） ============ -->
+    <section class="relative hidden overflow-hidden r-[28px] m-4 lg:flex lg:flex-col p-10 xl:p-14 bg-[var(--m3-surface-container-low)]">
       <div
-        class="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary-400/20 blur-3xl"
-      ></div>
-      <div
-        class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary-500/15 blur-3xl"
-      ></div>
-      <div
-        class="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-300/10 blur-3xl"
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0"
+        :style="{
+          background: `
+            radial-gradient(80% 60% at 20% 0%, color-mix(in srgb, var(--m3-primary) 16%, transparent), transparent 60%),
+            radial-gradient(70% 55% at 90% 35%, color-mix(in srgb, var(--m3-tertiary) 16%, transparent), transparent 60%),
+            radial-gradient(60% 50% at 50% 100%, color-mix(in srgb, var(--m3-secondary) 14%, transparent), transparent 65%)`
+        }"
       ></div>
 
-      <!-- Grid Pattern -->
-      <div
-        class="absolute inset-0 bg-[linear-gradient(rgba(20,184,166,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(20,184,166,0.03)_1px,transparent_1px)] bg-[size:64px_64px]"
-      ></div>
-    </div>
-
-    <!-- Content Container -->
-    <div class="relative z-10 w-full max-w-md">
-      <!-- Logo/Brand -->
-      <div class="mb-8 text-center">
-        <!-- Custom Logo or Default Logo -->
-        <template v-if="settingsLoaded">
-          <div
-            class="mb-4 inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl shadow-lg shadow-primary-500/30"
-          >
-            <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
-          </div>
-          <h1 class="text-gradient mb-2 text-3xl font-bold">
-            {{ siteName }}
-          </h1>
-          <p class="text-sm text-gray-500 dark:text-dark-400">
+      <!-- 站点标识 -->
+      <div class="relative flex items-center gap-3">
+        <div class="grid h-11 w-11 place-items-center rounded-[13px] bg-[var(--m3-primary)] text-[var(--m3-on-primary)]">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a9 9 0 0 1 9 9" stroke-linecap="round" />
+            <path d="M4 4a16 16 0 0 1 16 16" stroke-linecap="round" />
+            <circle cx="5" cy="19" r="1.6" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-[22px] font-medium leading-none text-[var(--m3-on-surface)]">{{ siteName }}</p>
+          <p class="mt-1 text-xs font-medium tracking-wide text-[var(--m3-on-surface-variant)]">
             {{ siteSubtitle }}
           </p>
-        </template>
+        </div>
       </div>
 
-      <!-- Card Container -->
-      <div class="card-glass rounded-2xl p-8 shadow-glass">
-        <slot />
+      <!-- 主标语 -->
+      <div class="relative mt-14 max-w-xl">
+        <h1
+          class="text-[36px] font-normal leading-[44px] text-[var(--m3-on-surface)]"
+          style="letter-spacing: 0"
+        >
+          {{ t('auth.brandHeadline') }}
+        </h1>
+        <p class="mt-5 text-[16px] leading-6 text-[var(--m3-on-surface-variant)]">
+          {{ t('auth.brandSubheadline') }}
+        </p>
       </div>
 
-      <!-- Footer Links -->
-      <div class="mt-6 text-center text-sm">
-        <slot name="footer" />
+      <!-- 平台标签 -->
+      <div class="relative mt-6 flex flex-wrap gap-2">
+        <span
+          v-for="p in platformTags"
+          :key="p"
+          class="inline-flex items-center rounded-full bg-[var(--m3-secondary-container)] px-3.5 py-1.5 text-sm font-medium text-[var(--m3-on-secondary-container)]"
+        >
+          {{ p }}
+        </span>
       </div>
 
-      <!-- Copyright -->
-      <div class="mt-8 text-center text-xs text-gray-400 dark:text-dark-500">
-        &copy; {{ currentYear }} {{ siteName }}. All rights reserved.
+      <!-- 底部特性 -->
+      <div class="relative mt-auto grid grid-cols-2 gap-3 pt-12">
+        <div
+          v-for="f in features"
+          :key="f.title"
+          class="rounded-2xl bg-[color-mix(in_srgb,var(--m3-surface-container)_80%,transparent)] p-4"
+        >
+          <p class="text-sm font-medium text-[var(--m3-on-surface)]">{{ f.title }}</p>
+          <p class="mt-1 text-xs leading-4 text-[var(--m3-on-surface-variant)]">{{ f.desc }}</p>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- ============ 表单面板 ============ -->
+    <section class="relative flex flex-col items-center justify-center px-6 py-10">
+      <!-- 移动端标识 -->
+      <div class="mb-6 flex items-center gap-3 lg:hidden">
+        <div class="grid h-10 w-10 place-items-center rounded-xl bg-[var(--m3-primary)] text-[var(--m3-on-primary)]">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 11a9 9 0 0 1 9 9" stroke-linecap="round" />
+            <path d="M4 4a16 16 0 0 1 16 16" stroke-linecap="round" />
+            <circle cx="5" cy="19" r="1.6" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+        <p class="text-xl font-medium">{{ siteName }}</p>
+      </div>
+
+      <!-- 卡片容器 -->
+      <div class="relative z-10 w-full max-w-[400px]">
+        <div class="overflow-hidden rounded-xl border border-[var(--m3-outline-variant)] bg-[var(--m3-surface-container-lowest)]">
+          <div class="p-5 sm:p-8">
+            <slot />
+          </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="mt-6 text-center text-sm">
+          <slot name="footer" />
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-6 text-center text-xs text-[var(--m3-on-surface-variant)]">
+          &copy; {{ currentYear }} {{ siteName }}. All rights reserved.
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores'
-import { sanitizeUrl } from '@/utils/url'
 
+const { t } = useI18n()
 const appStore = useAppStore()
 
 const siteName = computed(() => appStore.siteName || 'Sub2API')
-const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const siteSubtitle = computed(() => appStore.cachedPublicSettings?.site_subtitle || 'Subscription to API Conversion Platform')
-const settingsLoaded = computed(() => appStore.publicSettingsLoaded)
 
 const currentYear = computed(() => new Date().getFullYear())
+
+const platformTags = computed(() => {
+  const raw = t('auth.brandPlatforms')
+  return raw.split(/[,，、]/).map((s) => s.trim()).filter(Boolean).slice(0, 6)
+})
+
+const features = computed(() => {
+  const raw = t('auth.brandFeatures')
+  // 格式：标题|描述 按逗号/顿号分隔组
+  return raw.split(/[,，]/).map((s) => s.trim()).filter(Boolean).map((item) => {
+    const [title, desc] = item.split('|')
+    return { title: title?.trim() ?? '', desc: desc?.trim() ?? '' }
+  }).slice(0, 4)
+})
 
 onMounted(() => {
   appStore.fetchPublicSettings()
